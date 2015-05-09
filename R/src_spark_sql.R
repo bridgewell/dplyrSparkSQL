@@ -1,3 +1,4 @@
+#'@importFrom rJava .jaddClassPath
 .get_driver <- function() {
   jarlist <- dir(system.file("drv", package = .packageName), "^datanucleus", full.names = TRUE)
   lapply(jarlist, .jaddClassPath)
@@ -10,7 +11,7 @@
 
 #'@export
 src_desc.src_hive2 <- function(x) {
-  x
+  "Spark SQL"
 }
 
 #'@importClassesFrom RJDBC JDBCConnection
@@ -32,17 +33,22 @@ src_spark_sql <- function(host, port, user, password = NULL) {
 
 #'@export
 db_list_tables.src_hive2 <- function(con) {
-  dbListTables(con$con)
+  db_list_tables(con$con)
+}
+
+#'@export
+db_list_tables.Hive2Connection <- function(con) {
+  DBI::dbGetQuery(con, "SHOW TABLES")$tableName
 }
 
 #'@export
 db_has_table.src_hive2 <- function(con, table) {
-  dbExistsTable(con$con, table)
+  table %in% db_list_tables(con)
 }
 
 #'@export
 db_has_table.Hive2Connection <- function(con, table) {
-  dbExistsTable(con, table)
+  table %in% db_list_tables(con)
 }
 
 #'@export
@@ -63,6 +69,11 @@ hive2DataType <- function(dbObj, obj, ...) {
   if (is.integer(obj)) "INT"
   else if (is.numeric(obj)) "DOUBLE"
   else "STRING"
+}
+
+#'@export
+db_data_type.src_hive2 <- function(con, fields) {
+  db_data_type(con$con, fields)
 }
 
 #'@export 
@@ -87,7 +98,17 @@ db_create_table.Hive2Connection <- function(con, table, types, temporary = FALSE
          "2" = sprintf("USING org.apache.spark.sql.json OPTIONS (PATH %s)", escape(location))
     )
   sql <- paste("CREATE", if (temporary) "TEMPORARY" else "", "TABLE", ident(table), stored_as_location)
-  dbGetQuery(con, sql)
+  DBI::dbGetQuery(con, sql)
+}
+
+#'@export
+db_drop_table.src_hive2 <- function(con, table, force = FALSE, ...) {
+  db_drop_table.Hive2Connection(con$con, table, force, ...)
+}
+
+#'@export
+db_drop_table.Hive2Connection <- function(con, table, force = FALSE, ...) {
+  DBI::dbRemoveTable(con, table)
 }
 
 #'@export
@@ -108,3 +129,65 @@ db_insert_into.Hive2Connection <- function(con, table, values, ...) {
 #     sql <- paste("INSERT INTO TABLE", table, "VALUES", sql(values))
 #     dbSendQuery(con, "INSERT INTO TABLE test1 VALUES (1, 1.0, 'a')")
 }
+
+#'@export
+db_query_fields.src_hive2 <- function(con, sql, ...) {
+  db_query_fields(con$con, sql, ...)
+}
+
+#'@export
+db_query_fields.Hive2Connection <- function(con, sql, ...) {
+  fields <- sprintf("SELECT * FROM %s WHERE 0=1", sql)
+  df <- DBI::dbGetQuery(con, fields)
+  colnames(df)
+}
+
+#'@export
+src_translate_env.src_hive2 <- function(x) {
+  sql_variant(base_scalar, sql_translator(.parent = base_agg,
+                                          n = function() sql("count(*)")))
+}
+
+#'@export
+head.tbl_hive2 <- function(x, n = 6L, ...) {
+  dplyr:::build_query(x, limit = as.integer(n))$fetch()
+}
+
+wrap <- dplyr:::wrap
+
+commas <- dplyr:::commas
+
+#'@export
+print.tbl_hive2 <- function(x, ...) {
+  cat("Source: ", src_desc(x$src), "\n", sep = "")
+  if (inherits(x$from, "ident")) {
+    cat(paste0("From: ", x$from, " ", dim_desc(x), collapse = ""))
+  }
+  else {
+    cat(wrap("From: <derived table> ", dim_desc(x)))
+  }
+  cat("\n")
+  if (!is.null(x$where)) {
+    cat(wrap("Filter: ", commas(x$where)), "\n")
+  }
+  if (!is.null(x$order_by)) {
+    cat(wrap("Arrange: ", commas(x$order_by)), "\n")
+  }
+  if (!is.null(x$group_by)) {
+    cat(wrap("Grouped by: ", commas(x$group_by)), "\n")
+  }
+  cat("\n")
+  print(trunc_mat(x))
+  invisible(x)
+}
+
+#'@export
+sql_escape_ident.Hive2Connection <- function(con, x) {
+  as.character(x)
+}
+
+# #'@export
+# sql_escape_string.Hive2Connection <- function(con, x) {
+#   print(x)
+#   dplyr:::sql_escape_string.DBIConnection(con, x)
+# }

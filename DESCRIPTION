@@ -8,5 +8,5 @@ Maintainer: Wush Wu <wush978@gmail.com>
 Description: Spark SQL Backend for dplyr
 License: MIT
 Depends: dplyr(>= 0.4.1)
-Imports: DBI, RJDBC(>= 0.2), assertthat
+Imports: DBI, rJava, RJDBC(>= 0.2), assertthat
 Suggests: RUnit
