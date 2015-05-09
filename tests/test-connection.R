@@ -24,25 +24,13 @@ users
 nrow(users)
 
 filter(people, age < 20)
-filter(people, is.na(age))
 select(users, name, favorite_color)
 mutate(users, test_column = 1)
 mutate(users, test_column = 1) %>% collect
-
 group_by(people, name)
+
+# following commands producing errors
+
+filter(people, is.na(age))
 summarise(group_by(people, name), count = length(name))
-
 left_join(people, users, by = "name")
-
-# ---
-
-DBI::dbGetQuery(src$con, "SELECT * FROM people WHERE 0=1")
-
-# ---
-
-src2 <- src_sqlite(tempfile(), T)
-flights_sqlite <- copy_to(src2, flights, temporary = FALSE, indexes = list(
-  c("year", "month", "day"), "carrier", "tailnum"))
-db_data_type(src2$con, "year")
-# debug(dplyr:::db_query_fields.SQLiteConnection)
-flights <- tbl(src2, "flights")
