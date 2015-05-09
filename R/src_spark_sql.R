@@ -1,6 +1,10 @@
 #'@importFrom rJava .jaddClassPath
 .get_driver <- function() {
   jarlist <- dir(system.file("drv", package = .packageName), "^datanucleus", full.names = TRUE)
+  if (length(jarlist) != 3) {
+    get_driver()
+  }
+  jarlist <- dir(system.file("drv", package = .packageName), "^datanucleus", full.names = TRUE)
   lapply(jarlist, .jaddClassPath)
   assembly <- dir(system.file("drv", package = .packageName), "^spark-assembly", full.names = TRUE)
   RJDBC::JDBC("org.apache.hive.jdbc.HiveDriver", assembly)
