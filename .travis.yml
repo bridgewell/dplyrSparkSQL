@@ -1,10 +1,25 @@
-language: r
+language: scala
 
 sudo: required
 
-r_github_packages:
-  - jimhester/robustr
-  - jimhester/covr
+scala: 
+  - 2.10.4
+
+before_install:
+  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - chmod 755 ./travis-tool.sh
+  - ./travis-tool.sh bootstrap
+  - ./travis-tool.sh install_github dmlc/xgboost/R-package
+  - ./travis-tool.sh install_github jimhester/robustr
+  - ./travis-tool.sh install_github jimhester/covr
+
+install:
+  - ./travis-tool.sh install_deps
+
+script: ./travis-tool.sh run_tests
+
+after_failure:
+  - ./travis-tool.sh dump_logs
 
 after_success:
   - Rscript -e 'library(covr); coveralls()'
@@ -13,3 +28,9 @@ notifications:
   email:
     on_success: change
     on_failure: change
+
+env:
+  - global:
+  - WARNINGS_ARE_ERRORS=1
+  - _R_CHECK_FORCE_SUGGESTS_=0
+  - BOOTSTRAP_LATEX=1
