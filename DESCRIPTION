@@ -9,4 +9,4 @@ Description: Spark SQL Backend for dplyr
 License: MIT
 Depends: dplyr(>= 0.4.1)
 Imports: DBI, rJava, RJDBC(>= 0.2), assertthat
-Suggests: RUnit
+Suggests: testthat
