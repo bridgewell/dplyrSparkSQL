@@ -1,4 +1,7 @@
-# dplyr backend for Spark SQL (Experimental)
+# dplyr backend for Spark SQL
+
+[![Build Status](https://api.travis-ci.org/wush978/dplyrSparkSQL.png)](https://travis-ci.org/wush978/dplyrSparkSQL)
+[![Coverage Status](https://coveralls.io/repos/wush978/dplyrSparkSQL/badge.svg)](https://coveralls.io/r/wush978/dplyrSparkSQL)
 
 ## Introduction
 
