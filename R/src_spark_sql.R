@@ -187,11 +187,6 @@ print.tbl_hive2 <- function(x, ...) {
 
 #'@export
 sql_escape_ident.Hive2Connection <- function(con, x) {
-  as.character(x)
+  sql_quote(x, '`')
 }
 
-# #'@export
-# sql_escape_string.Hive2Connection <- function(con, x) {
-#   print(x)
-#   dplyr:::sql_escape_string.DBIConnection(con, x)
-# }

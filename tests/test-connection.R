@@ -32,5 +32,8 @@ group_by(people, name)
 # following commands producing errors
 
 filter(people, is.na(age))
-summarise(group_by(people, name), count = length(name))
-left_join(people, users, by = "name")
+summarise(group_by(people, name), count = length(name)) %>%
+  collect
+left_join(people, users, by = "name") %>%
+  collect
+
