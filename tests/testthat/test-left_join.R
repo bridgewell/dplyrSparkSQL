@@ -13,7 +13,7 @@ test_that("left_join works correctly", {
                   location = sprintf("file://%s", system.file("examples/people.json", package = "dplyrSparkSQL")))
   
   people <- tbl(src, "people")
-  
+  expect_equal(people %>% collect %>% as.data.frame, data.frame(age = c(NA, 30, 19, 15), name = c("Michael", "Andy", "Justin", "Alyssa"), stringsAsFactors = FALSE))
   db_create_table(src, "users", stored_as = "PARQUET", temporary = TRUE, 
                   location = sprintf("file://%s", system.file("examples/users.parquet", package = "dplyrSparkSQL")))
   users <- tbl(src, "users")
