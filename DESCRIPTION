@@ -1,6 +1,6 @@
 Package: dplyrSparkSQL
 Type: Package
-Title: Spark SQL Backend for dplyr
+Title: Spark SQL Backend for Dplyr
 Version: 0.0.1
 Date: 2015-04-27
 Author: Wush Wu
