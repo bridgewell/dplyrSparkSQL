@@ -11,3 +11,4 @@ License: GPL(>= 2)
 Depends: dplyr(>= 0.4.1)
 Imports: DBI, rJava, RJDBC(>= 0.2), assertthat
 Suggests: testthat
+SystemRequirements: Maven

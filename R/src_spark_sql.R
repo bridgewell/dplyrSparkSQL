@@ -1,13 +1,14 @@
 #'@importFrom rJava .jaddClassPath
 .get_driver <- function() {
-  jarlist <- dir(system.file("drv", package = .packageName), "^datanucleus", full.names = TRUE)
-  if (length(jarlist) != 3) {
+#   browser()
+  jarlist <- dir(system.file("drv", package = .packageName), pattern = "*.jar", full.names = TRUE)
+  if (length(jarlist) == 0) {
     get_driver()
+    jarlist <- dir(system.file("drv", package = .packageName), pattern = "*.jar", full.names = TRUE)
   }
-  jarlist <- dir(system.file("drv", package = .packageName), "^datanucleus", full.names = TRUE)
   lapply(jarlist, .jaddClassPath)
-  assembly <- dir(system.file("drv", package = .packageName), "^spark-assembly", full.names = TRUE)
-  RJDBC::JDBC("org.apache.hive.jdbc.HiveDriver", assembly)
+  driver <- dir(system.file("drv", package = .packageName), "hive-jdbc", full.names = TRUE)
+  RJDBC::JDBC("org.apache.hive.jdbc.HiveDriver", driver)
 }
 
 # borrowed from dplyr
