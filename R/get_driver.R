@@ -5,10 +5,9 @@ get_driver <- function() {
   link <- link_list[[1]][2]
   download.file(link, destfile = tmp_path <- tempfile(fileext = ".tar.gz"))
   stopifnot(untar(tmp_path, files = file.path("spark-1.3.1-bin-hadoop2.6", "lib"), compressed = "gzip", verbose = TRUE, exdir = tempdir()) == 0)
-  stopifnot(all(file.copy(
-    dir(file.path(tempdir(), "spark-1.3.1-bin-hadoop2.6", "lib"), "^datanucleus-", full.names = TRUE),
-    system.file("drv", package = .packageName))))
+  stopifnot(all(sapply(dir(file.path(tempdir(), "spark-1.3.1-bin-hadoop2.6", "lib"), "^datanucleus-", full.names = TRUE),
+                       file.copy, system.file("drv", package = .packageName))))
   stopifnot(file.copy(
-    dir(file.path(tempdir(), "spark-1.3.1-bin-hadoop2.6", "lib"), "^spark-assembly-", full.names = TRUE),
+    dir(file.path(tempdir(), "spark-1.3.1-bin-hadoop2.6", "lib"), "^spark-assembly-", full.names = TRUE)[1],
     system.file("drv", package = .packageName)))
 }
