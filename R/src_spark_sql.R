@@ -60,9 +60,11 @@ tbl.src_hive2 <- function(src, from, ...) {
   tbl_sql("hive2", src = src, from = from, ...)
 }
 
+#'@importFrom dplyr db_begin
 #'@export
 db_begin.Hive2Connection <- function(con, ...) TRUE
 
+#'@importFrom dplyr db_commit
 #'@export
 db_commit.Hive2Connection <- function(con, ...) TRUE
 
