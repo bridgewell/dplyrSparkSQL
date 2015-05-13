@@ -17,6 +17,7 @@ install:
   - ./travis-tool.sh install_deps
 
 script: 
+  - chmod 755 ./inst/run_test.sh
   - ./inst/run_test.sh
 
 after_failure:
@@ -35,3 +36,4 @@ env:
     - WARNINGS_ARE_ERRORS=1
     - _R_CHECK_FORCE_SUGGESTS_=0
     - BOOTSTRAP_LATEX=1
+    - LOCAL_SPARK_SERVER=true
