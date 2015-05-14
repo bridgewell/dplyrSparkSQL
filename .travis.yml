@@ -37,5 +37,4 @@ env:
     - _R_CHECK_FORCE_SUGGESTS_=0
     - BOOTSTRAP_LATEX=1
     - LOCAL_SPARK_SERVER=true
-    - JAVA_OPTS="-Xmx1G"
-    - SBT_OPTS="-XX:MaxPermSize=512M -Xmx1G"
+    - SBT_OPTS="-XX:MaxPermSize=1G -Xmx1G"
