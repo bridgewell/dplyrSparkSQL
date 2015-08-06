@@ -4,7 +4,7 @@ Title: Spark SQL Backend for Dplyr
 Version: 0.0.1
 Date: 2015-04-27
 Author: Wush Wu
-Maintainer: Wush Wu <wush978@gmail.com>
+Maintainer: Wush Wu <wush@bridgewell.com>
 Description: This package provides a SQL backend for dplyr to communicate
              with data in Apache Spark Thrift JDBC/ODBC Server.
 License: GPL(>= 2)
