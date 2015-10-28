@@ -151,8 +151,17 @@ db_query_fields.Hive2Connection <- function(con, sql, ...) {
 
 #'@export
 src_translate_env.src_hive2 <- function(x) {
-  sql_variant(base_scalar, sql_translator(.parent = base_agg,
-                                          n = function() sql("count(*)")))
+  sql_variant( 
+    sql_translator(
+      .parent = base_scalar,
+      as.numeric = function(x) build_sql("CAST(", x, " AS DOUBLE)"),
+      as.integer = function(x) build_sql("CAST(", x, " AS INT)"),
+      as.character = function(x) build_sql("CAST(", x, " AS STRING)")
+      ),
+    sql_translator(
+      .parent = base_agg,
+      n = function() sql("count(*)")),
+    base_win)
 }
 
 #'@export
