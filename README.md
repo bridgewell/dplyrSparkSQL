@@ -23,7 +23,7 @@ Please see the document of Apache Spark: [Distributed SQL Engine - Running the T
 
 ```r
 library(devtools)
-install_github("wush978/dplyrSparkSQL")
+install_github("bridgewell/dplyrSparkSQL")
 ```
 
 If you install in this way, the `dplyrSparkSQL` will trying to download the spark binaries automatically to
